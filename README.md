@@ -1,19 +1,19 @@
 # Smart Contract: Auction
 
-##Table of Contents
+## Table of Contents
 * [Group Members](#group-members)
 * [Purpose of Contract](#purpose-of-contract)
 * [Interface of Contract with function and event headers](#interface-of-contract-with-function-and-event-headers)
 
-##Group Members
+## Group Members
 - Muskan Kapoor(Muskan.kapoor75@myhunter.cuny.edu) 
 - Rinchen Lama(rinchenlama0075@gmail.com)
 - Xiaoxia Zhang(xiaoxiazhang00@gmail.com)
 - Jeremy Chen(jeremy.chen69@myhunter.cuny.edu)
 - Leman Yan(Leman.Yan80@Myhunter.cuny.edu)
 
-##Purpose of Contract
-###Summary
+## Purpose of Contract
+### Summary
 A host of an item will execute the smart contract (auction) everytime they want to auction off an item. 
 The auction will have a time limit. The contract has a description of the item and the address of the current owner. 
 Anyone can bid for the item, and the highest bidder will get the item. The ownership will move to the new owner via Eth address.
