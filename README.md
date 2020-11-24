@@ -24,21 +24,21 @@ Anyone can bid for the item, and the highest bidder will get the item. The owner
 
     - string Name – name of the object/auctioned item
     - string Description – description of the item
-    - Var time_remaining - (countdown)
-    - Address owner_address) //current owner
-    - Float price //minimum_price /marked_by_seller
-    - Float current_highest_bid //the highest bid at the time
-    - Address current_highest_bidder 
-    - List [] bid_history //bids that have been placed with addresses and bid amount
-    - Time&Date Start time
-    - Time&Date End time 
+    - Var time_remaining - countdown
+    - Address owner_address) -current owner
+    - Float price - minimum_price/marked_by_seller
+    - Float current_highest_bid - the highest bid at the time
+    - Address current_highest_bidder - the highest bidder at the time
+    - List [] bid_history - bids that have been placed with addresses and bid amount
+    - Time&Date Start time - time of start
+    - Time&Date End time - time the contract is supposed to end
     - Ethereum address - Auction’s owner’s address
     - Ethereum address - Item’s owner address
-    - MinimumBidIncrement
+    - MinimumBidIncrement - minimum amount to bid (set to 1% of the item's current price)
 
  **Functions**
 
-/** Function leads to a page of the item which includes information like name, description, time remaining, bidding history. 
+/** View Item Function leads to a page of the item which includes information like name, description, time remaining, bidding history. 
 Has helper functions
 */
 
