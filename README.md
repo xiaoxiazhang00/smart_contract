@@ -17,6 +17,7 @@
 A host of an item will execute the smart contract (auction) everytime they want to auction off an item. 
 The auction will have a time limit. The contract has a description of the item and the address of the current owner. 
 Anyone can bid for the item, and the highest bidder will get the item. The ownership will move to the new owner via Eth address.
+We are doing one contract per item. 
  
 ## Interface of Contract with function and event headers
 
