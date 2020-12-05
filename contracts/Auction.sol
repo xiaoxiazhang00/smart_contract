@@ -11,7 +11,7 @@ contract Auction {
     // (X) - Address current_highest_bidder - the highest bidder at the time
     //     - List [] bid_history - bids that have been placed with addresses and bid amount
     //    - Time&Date Start_time - time of start.
-    // (Return type is different) - Time&Date End_time - time the contract is supposed to end
+    // (Return type is different) - Time&Date end_time - time the contract is supposed to end
     // (same as owner_address right?) - Ethereum address - Auction’s owner’s address
     // (is basically current_highest_bidder after the auction is over right?) - Ethereum address - Item’s owner address
     //     - MinimumBidIncrement - minimum amount to bid (set to 1% of the item's current price)
@@ -20,7 +20,7 @@ contract Auction {
 
 
     address payable public seller_address;
-    uint public End_time;
+    uint public end_time;
     unit public price;
 
     // Current state of the auction.
@@ -36,12 +36,12 @@ contract Auction {
     }
 
     constructor(
-        uint auction_Duration,
+        uint auction_duration,
         address payable _seller_address
         uint starting_price
     ) public {
         seller_address = _seller_address;
-        End_time = now + auction_Duration;
+        end_time = now + auction_duration;
         price = starting_price;
     }
 
@@ -84,10 +84,10 @@ contract Auction {
         // Function: Returns time remaining in the auction.
 
         require(
-            now <= auctionEndTime,
+            now <= end_time,
             "Auction already ended."
         );
-        uint time_remaining = End_time - now;
+        uint time_remaining = end_time - now;
         return time_remaining;
     }
 
@@ -123,7 +123,7 @@ contract Auction {
         // Function: Increases the time left for the auction.
         
         uint extra_time = 2; // (D) Putting TBD would not work in testing so 2 is a placeholder rn.
-        End_time = End_time + extra_time;
+        end_time = end_time + extra_time;
     }
 
 
