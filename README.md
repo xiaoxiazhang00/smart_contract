@@ -1,3 +1,6 @@
+<<<<<<< Updated upstream
+# smart_contract
+=======
 # Smart Contract: Auction
 
 ## Table of Contents
@@ -26,7 +29,7 @@ We are doing one contract per item.
     - string Name – name of the object/auctioned item
     - string Description – description of the item
     - Var time_remaining - countdown
-    - Address owner_address) -current owner
+    - Address owner_address - current owner
     - Float price - minimum_price/marked_by_seller
     - Float current_highest_bid - the highest bid at the time
     - Address current_highest_bidder - the highest bidder at the time
@@ -72,23 +75,30 @@ function Bid (item x, address bidder, long double bid_amount)
 ```
     
 /**
-end the auction only accessible by the selling party *immediately ends the auction. 
+    Ends the auction only accessible by the selling party *immediately ends the auction. 
 */
 ```
 function end_auction()
-function add_time() // (in the last TBD minutes of an auction) called everytime a bid is placed if the auction is about to end and increases the time left for the auction
+```
+
+/**
+    (in the last TBD minutes of an auction) called everytime a bid is placed if the auction is about to end and increases the time left for the auction
+*/
+``` 
+function add_time() 
 ``` 
 
- /**
-If no one placed a bid for the item, the auction should end by itself. Time has past the end time. Delete contract.
+/**
+    If no one placed a bid for the item, the auction should end by itself. Time has past the end time. Delete contract.
 */
 ```
 function cancelAuction()
 ```
   
 /**
-Only happens if an auction continues after the end time and owner wants to end the auction. Item will be transferred to highest bidder. 
+    Only happens if an auction continues after the end time and owner wants to end the auction. Item will be transferred to highest bidder. 
 */
 ```
 function closeAuction()
 ``` 
+>>>>>>> Stashed changes
