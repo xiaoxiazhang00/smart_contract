@@ -113,6 +113,13 @@ contract Auction {
 
 
     function endAuction() public {
+        require(now >=  end_time; "Auction not yet ended.");
+        require(!ended, "auction  has already ended.");
+
+ 
+        ended = true;
+      
+       current_highest_bidder.transfer(current_highest_bid);
 
     }
 
