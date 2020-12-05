@@ -118,7 +118,7 @@ contract Auction {
 
  
         ended = true;
-        current_highest_bidder.transfer(current_highest_bid);
+        seller_address.transfer(current_highest_bid);
     }
 
 
