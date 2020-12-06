@@ -105,7 +105,7 @@ contract Auction {
         is higher than highest bid, then the highest bidder's funds should be released back to he/she and update highest bid.
     */
     function bid(address bidder, fixed128x10 bid_amount) payable public {
-
+        bid_history.push(bid_record(bidder, bid_amount, block.timestamp));
     }
 
 
