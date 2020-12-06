@@ -90,7 +90,10 @@ contract Auction {
         return (bid.bidder_address, bid.bid_amount, bid.time_placed);
     }
 
-    /* transfer funds would be to withdraw the amount from one address and transfer it to the next)
+    /* 
+        transfer funds (withdraw the amount) from the buyer address
+        transfer it to the seller address 
+    */
     function transferFunds(address buyer, address seller, fixed128x10 cost) public {
         
         buyer.transfer(cost);
@@ -122,6 +125,11 @@ contract Auction {
     }
 
 
+
+    /*
+        End the auction and transfer highest bid. This looks at the time and 
+        indicates if auction has ended
+    */
     function endAuction() public {
         require(block.timestamp >=  end_time, "Auction not yet ended.");
         require(!ended, "Auction has already ended.");
