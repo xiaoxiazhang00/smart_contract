@@ -26,12 +26,13 @@ contract Auction {
 
     bool ended; // Auction status. Default is false. Set to true at end of auction and disallows any further changes.
 
+    bid[] public bid_history;
+
     struct bid {
         address public bidder_address;
         uint public bid_amount;
         uint public time_placed;
-    }
-  
+
   
     constructor(
         uint auction_duration,
@@ -83,8 +84,8 @@ contract Auction {
 
 
     function getBiddingHistory() public {
-        //Displays bidding history which is a list of outbidded prices with corresponding addresses.
-        
+        //Displays bidding history which is a list of outbidded prices with timestamps.
+        return bid_history;
     }
 
 
@@ -110,7 +111,7 @@ contract Auction {
         require(block.timestamp >=  end_time; "Auction not yet ended.");
         require(!ended, "Auction has already ended.");
 
- 
+
         ended = true;
         seller_address.transfer(current_highest_bid);
     }
