@@ -1,5 +1,4 @@
-<<<<<<< Updated upstream
-# smart_contract
+
 =======
 # Smart Contract: Auction
 
@@ -101,4 +100,4 @@ function cancelAuction()
 ```
 function closeAuction()
 ``` 
->>>>>>> Stashed changes
+

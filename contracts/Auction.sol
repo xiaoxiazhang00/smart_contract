@@ -21,6 +21,7 @@ contract Auction {
 
     address payable public seller_address;
     uint public end_time;
+    uint public original_end_time;
     unit public price;
 
     // Current state of the auction.
@@ -42,6 +43,7 @@ contract Auction {
     ) public {
         seller_address = _seller_address;
         end_time = now + auction_duration;
+        original_end_time = end_time;
         price = starting_price;
     }
 
@@ -83,10 +85,7 @@ contract Auction {
         // Condition(s): Auction cannot be over.
         // Function: Returns time remaining in the auction.
 
-        require(
-            now <= end_time,
-            "Auction already ended."
-        );
+        require(now <= end_time,"Auction already ended.");
         uint time_remaining = end_time - now;
         return time_remaining;
     }
@@ -124,10 +123,13 @@ contract Auction {
 
     function addTime() public {
         // Info: The purpose of this function is to prevent someone from stealing the auction by quickly bidding before the end of the auction.
-        // Condition(s): Only called in the last TBD minutes of an auction
+        // Condition(s): The auction has <= 2 minutes remaining.
         // Function: Increases the time left for the auction.
         
-        uint extra_time = 2; // (D) Putting TBD would not work in testing so 2 is a placeholder rn.
+        require(end_time - now <= 120,"Not within 2 minutes remaining.");
+
+        // Adds an additional minute every time a bid is made when there is less than or equal to 2 minutes remaining.
+        uint extra_time = 60;
         end_time = end_time + extra_time;
     }
 
@@ -141,10 +143,15 @@ contract Auction {
 
 
     function closeAuction() public {
-        // Info: 
-        // Condition(s): Only happens if an auction continues after the end time and owner wants to end the auction. 
+        // Info: If the auction extends past the original end time but the seller is satisfied or needs the funds at a specific time, this function allows them to end the auction.
+        // Condition(s): An auction continues after the end time.
         // Function: Item will be transferred to highest bidder. 
 
+        require(now >= original_end_time,"Auction has not passed original end time.");
+
+        ended = true;
+        
+        //To do: transfer ownership of the item to the highest bidder.
     }
 
 }
