@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.4.22 <0.8.0;
+pragma solidity >=0.7.0 <0.8.0;
 
 contract Auction {
     // (Sort of. See getTimeRemaining function) - Var time_remaining - countdown
@@ -21,7 +21,7 @@ contract Auction {
     uint public reserve_price; // Minimum amount that a seller will accept as the winning bid
 
     // Current state of the auction.
-    address public current_highest_bidder;
+    address payable public current_highest_bidder;
     uint public current_highest_bid;
 
     bool ended; // Auction status. Default is false. Set to true at end of auction and disallows any further changes.
@@ -46,6 +46,7 @@ contract Auction {
         original_end_time = end_time;
         reserve_price = starting_price;
         ended = false;
+        current_highest_bid = 0; 
     }
 
 
@@ -110,6 +111,9 @@ contract Auction {
       
     }
 
+
+    function sendFunds(address x, address y) public {}
+
     function transferOwnserhip(address buyer, address seller) public {
          
             
@@ -120,8 +124,34 @@ contract Auction {
         Place a bid on the item. The bid is added to the history of bids list. Incoming bid must be higher than the highest bid otherwise reject the bid. If incoming bid
         is higher than highest bid, then the highest bidder's funds should be released back to he/she and update highest bid.
     */
-    function bid(address bidder, uint bid_amount) payable public {
-        bid_history.push(bid_record(bidder, bid_amount, block.timestamp));
+    function bid() payable public {
+        require(
+            block.timestamp <= end_time,
+            "Auction is over."
+        );
+        
+        require(
+            msg.value > current_highest_bid, 
+            // "The current highest bid is: ", current_highest_bid, ". You must place a higher bid"
+            "You must place a higher bid"
+        );
+        
+        /*
+            msg.sender (address payable): sender of the message (current call)
+            msg.value (uint): number of wei sent with the message
+        */
+        bid_history.push(bid_record(msg.sender, msg.value, block.timestamp));
+        
+        if (current_highest_bid == 0){
+            current_highest_bid = msg.value;
+            current_highest_bidder = msg.sender; 
+        }
+        else{
+            current_highest_bidder.transfer(address(this).balance);
+            current_highest_bidder = msg.sender;
+            current_highest_bid = msg.value; 
+        }
+        
     }
 
 
@@ -175,4 +205,28 @@ contract Auction {
         //To do: transfer ownership of the item to the highest bidder.
     }
 
+    /*
+        Converts uint to string. 
+        
+        Code taken from: https://github.com/provable-things/ethereum-api/blob/master/oraclizeAPI_0.5.sol#L1045
+    */
+
+    function uint2str(uint _i) internal pure returns (string memory _uintAsString) {
+        if (_i == 0) {
+            return "0";
+        }
+        uint j = _i;
+        uint len;
+        while (j != 0) {
+            len++;
+            j /= 10;
+        }
+        bytes memory bstr = new bytes(len);
+        uint k = len - 1;
+        while (_i != 0) {
+            bstr[k--] = byte(uint8(48 + _i % 10));
+            _i /= 10;
+        }
+        return string(bstr);
+    }
 }
