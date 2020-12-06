@@ -91,14 +91,33 @@ contract Auction {
         return (bid.bidder_address, bid.bid_amount, bid.time_placed);
     }
 
+    /* 
+        transfer funds (withdraw the amount) from the buyer address
+        transfer it to the seller address 
+    */
+    function transferFunds(address buyer, address seller, fixed128x10 cost) public {
+        
+        buyer.transfer(cost);
+        buyer(this).balance -= cost;
+        
+        seller(this).balance += cost
+        
+        // just an error check
+        if (!buyer.send(cost)) {
+              return false;
+         }
 
-    function transferOwnership(address x, address y) public {
-
+        return true;
+      
     }
 
 
-    function sendFunds(address x, address y) public {
+    function sendFunds(address x, address y) public {}
 
+    function transferOwnserhip(address buyer, address seller) public {
+         
+            
+       
     }
 
     /*
@@ -136,6 +155,11 @@ contract Auction {
     }
 
 
+
+    /*
+        End the auction and transfer highest bid. This looks at the time and 
+        indicates if auction has ended
+    */
     function endAuction() public {
         require(block.timestamp >=  end_time, "Auction not yet ended.");
         require(!ended, "Auction has already ended.");
