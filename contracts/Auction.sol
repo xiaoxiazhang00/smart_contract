@@ -2,13 +2,7 @@
 pragma solidity >=0.4.22 <0.8.0;
 
 contract Auction {
-    // (X) - string Name – name of the object/auctioned item
-    // (X) - string Description – description of the item
     // (Sort of. See getTimeRemaining function) - Var time_remaining - countdown
-    // (X) - Address owner_address - current owner
-    // (X) - Float price - minimum_price/marked_by_seller
-    // (Return type is different) - Float current_highest_bid - the highest bid at the time
-    // (X) - Address current_highest_bidder - the highest bidder at the time
     //     - List [] bid_history - bids that have been placed with addresses and bid amount
     //    - Time&Date Start_time - time of start.
     // (Return type is different) - Time&Date end_time - time the contract is supposed to end
@@ -16,87 +10,85 @@ contract Auction {
     // (is basically current_highest_bidder after the auction is over right?) - Ethereum address - Item’s owner address
     //     - MinimumBidIncrement - minimum amount to bid (set to 1% of the item's current price)
 
+    string item_name;    // Name of the object/auctioned item
+    string description; // Description of the item
 
-
-
-    address payable public seller_address;
+    address public item_owner_address; // Default will be set to seller, but will be set to highest bidder at end of auction.
+    address payable public seller_address; // Owner of item
+    uint public start_time; 
     uint public end_time;
     uint public original_end_time;
-    unit public price;
+    unit public reserve_price; // Minimum amount that a seller will accept as the winning bid
 
     // Current state of the auction.
     address public current_highest_bidder;
     uint public current_highest_bid;
 
-    // Set to true at the end, disallows any change.
-    // By default initialized to `false`.
-    bool ended;
+    bool ended; // Auction status. Default is false. Set to true at end of auction and disallows any further changes.
 
-    constructor() public {
-        
+    struct bid {
+        address public bidder_address;
+        uint public bid_amount;
+        uint public time_placed;
     }
-
+  
+  
     constructor(
         uint auction_duration,
         address payable _seller_address
         uint starting_price
     ) public {
+        item_owner_address = _seller_address;
         seller_address = _seller_address;
-        end_time = now + auction_duration;
-        original_end_time = end_time;
-        price = starting_price;
+        start_time = block.timestamp;
+        end_time = block.timestamp + auction_duration;
+        original_end_time = end_time
+        reserve_price = starting_price;
+        ended = false;
     }
 
 
-    struct item {
-        uint id;
-        string name;
-        string description;
-    }
-
-    struct bid {
-        address public bidder_address;
-        uint public bid_amount;
-        uint public Time_placed;
-    }
 
 
-    function viewItem(item memory x) public {
+    function viewItem() public {
         // Leads to a page of the item which includes information like name, description, time remaining, bidding history.
         // Has helper functions.
     }
 
 
-    function getName(item x) public {
+    function getName() public {
         // Function: Returns the name of the item.
 
-        return x.name;
+        return item_name;
     }
 
 
-    function getDescription(item x) public {
+    function getDescription() public {
         // Function: Returns description of the item.
 
-        return x.description;
+        return description;
     }
 
 
-    function getTimeRemaining(item x) public {
-        // Condition(s): Auction cannot be over.
+    function getTimeRemaining() public {
+        // Condition(s): Auction cannot be over. Auction has not ended.
         // Function: Returns time remaining in the auction.
 
-        require(now <= end_time,"Auction already ended.");
-        uint time_remaining = end_time - now;
+        require(block.timestamp <= end_time,"Auction has already ended.");
+        require(!ended, "Auction has already ended.");
+
+        uint time_remaining = end_time - block.timestamp;
         return time_remaining;
     }
 
 
-    function getBiddingHistory(item x) public {
-        //Displays bidding history which is a list of outbidded prices with timestamps.
+    function getBiddingHistory() public {
+        //Displays bidding history which is a list of outbidded prices with corresponding addresses.
+        
     }
 
 
-    function transferOwnership(address x, address y, item x) public {
+    function transferOwnership(address x, address y) public {
 
     }
 
@@ -105,15 +97,18 @@ contract Auction {
 
     }
 
-
-    function Bid(item x, address bidder, fixed128x10 memory bid_amount) public {
+    /*
+        Place a bid on the item. The bid is added to the history of bids list. Incoming bid must be higher than the highest bid otherwise reject the bid. If incoming bid 
+        is higher than highest bid, then the highest bidder's funds should be released back to he/she and update highest bid. 
+    */
+    function bid public payable (address bidder, fixed128x10 memory bid_amount) public {
 
     }
 
 
     function endAuction() public {
-        require(now >=  end_time; "Auction not yet ended.");
-        require(!ended, "auction  has already ended.");
+        require(block.timestamp >=  end_time; "Auction not yet ended.");
+        require(!ended, "Auction has already ended.");
 
  
         ended = true;
@@ -123,10 +118,11 @@ contract Auction {
 
     function addTime() public {
         // Info: The purpose of this function is to prevent someone from stealing the auction by quickly bidding before the end of the auction.
-        // Condition(s): The auction has <= 2 minutes remaining.
+        // Condition(s): The auction has <= 2 minutes remaining. Auction has not ended.
         // Function: Increases the time left for the auction.
         
-        require(end_time - now <= 120,"Not within 2 minutes remaining.");
+        require(end_time - block.timestamp <= 120,"Not within 2 minutes remaining.");
+        require(!ended, "Auction has already ended.");
 
         // Adds an additional minute every time a bid is made when there is less than or equal to 2 minutes remaining.
         uint extra_time = 60;
@@ -144,10 +140,11 @@ contract Auction {
 
     function closeAuction() public {
         // Info: If the auction extends past the original end time but the seller is satisfied or needs the funds at a specific time, this function allows them to end the auction.
-        // Condition(s): An auction continues after the end time.
+        // Condition(s): An auction continues after the end time. Auction has not ended.
         // Function: Item will be transferred to highest bidder. 
 
-        require(now >= original_end_time,"Auction has not passed original end time.");
+        require(block.timestamp >= original_end_time,"Auction has not passed original end time.");
+        require(!ended, "Auction has already ended.");
 
         ended = true;
         
@@ -155,4 +152,3 @@ contract Auction {
     }
 
 }
-
