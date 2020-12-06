@@ -104,7 +104,7 @@ contract Auction {
         Place a bid on the item. The bid is added to the history of bids list. Incoming bid must be higher than the highest bid otherwise reject the bid. If incoming bid
         is higher than highest bid, then the highest bidder's funds should be released back to he/she and update highest bid.
     */
-    function bid(address bidder, fixed128x10 bid_amount) payable public {
+    function bid(address bidder, uint bid_amount) payable public {
         bid_history.push(bid_record(bidder, bid_amount, block.timestamp));
     }
 
