@@ -186,8 +186,10 @@ contract Auction {
             current_highest_bid = msg.value;
         }
 
-        // Prevent someone from stealing the auction by quickly bidding before the end of the auction.
-        // Increases the time left(1 minute) for the auction if someone place bid during the last 2 minutes
+        /*
+            Prevent someone from stealing the auction by quickly bidding before the end of the auction.
+            Increases the time left(1 minute) for the auction if someone place bid during the last 2 minutes
+        */
         if (end_time - block.timestamp <= 120) {
             end_time = end_time + 60;
         }
