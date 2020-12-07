@@ -145,7 +145,11 @@ contract Auction {
 
         // return true;
     }
-
+    
+   /* 
+        transfer ownership 
+        set and transfer the item_owner_address to the buyer address 
+    */
     function transferOwnserhip(address buyer) public {
         item_owner_address = buyer;
     }
