@@ -48,9 +48,14 @@ contract Auction {
         current_highest_bid = 0;
     }
 
-    function viewItem() public {
+    function viewItem() public view returns (string memory, string memory) {
         // Leads to a page of the item which includes information like name, description, time remaining, bidding history.
         // Has helper functions.
+        string memory name = this.getName();
+        // string memory conjunction = ": "
+        string memory desc = this.getDescription();
+
+        return (name, desc);
     }
 
     function getName() public view returns (string memory) {
