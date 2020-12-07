@@ -135,7 +135,7 @@ contract Auction {
     test function to check if the bidder has enough money to bid
     enough money to bid = highest_bid + 3% of highest bid + transaction cost
     */
-    function can_bid(address payable buyer) public payable returns (bool) {
+    function canBid(address payable buyer) public payable returns (bool) {
         if (
             current_highest_bid +
                 (current_highest_bid / 100) *
@@ -161,7 +161,7 @@ contract Auction {
             "You must place a higher bid."
         );
         require(
-            can_bid(msg.sender) == true,
+            canBid(msg.sender) == true,
             "You do not have sufficient balance."
         );
 
