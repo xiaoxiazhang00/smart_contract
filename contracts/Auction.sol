@@ -37,7 +37,7 @@ contract Auction {
         uint256 auction_duration,
         address payable _seller_address,
         uint256 starting_price
-    ) public {
+    ) {
         item_owner_address = _seller_address;
         seller_address = _seller_address;
         start_time = block.timestamp;
@@ -83,10 +83,17 @@ contract Auction {
         return time_remaining;
     }
 
+    /*
+        return the record count of bid history
+    */
     function getBidHistroyCount() public view returns (uint256) {
         return bid_history.length;
     }
 
+    /*
+        return a bid record by index
+        index the index of bid history array
+    */
     function getBidHistoryByIndex(uint256 index)
         public
         view
@@ -97,6 +104,7 @@ contract Auction {
         )
     {
         // ;
+        require(index < bid_history.length, "Index out of range.");
         return (
             bid_history[index].bidder_address,
             bid_history[index].bid_amount,
@@ -177,6 +185,12 @@ contract Auction {
             current_highest_bidder = msg.sender;
             current_highest_bid = msg.value;
         }
+
+        // Prevent someone from stealing the auction by quickly bidding before the end of the auction.
+        // Increases the time left(1 minute) for the auction if someone place bid during the last 2 minutes
+        if (end_time - block.timestamp <= 120) {
+            end_time = end_time + 60;
+        }
     }
 
     /*
@@ -190,22 +204,6 @@ contract Auction {
         ended = true;
         seller_address.transfer(current_highest_bid);
         this.transferOwnserhip(current_highest_bidder);
-    }
-
-    function addTime() public {
-        // Info: The purpose of this function is to prevent someone from stealing the auction by quickly bidding before the end of the auction.
-        // Condition(s): The auction has <= 2 minutes remaining. Auction has not ended.
-        // Function: Increases the time left for the auction.
-
-        require(
-            end_time - block.timestamp <= 120,
-            "Not within 2 minutes remaining."
-        );
-        require(!ended, "Auction has already ended.");
-
-        // Adds an additional minute every time a bid is made when there is less than or equal to 2 minutes remaining.
-        uint256 extra_time = 60;
-        end_time = end_time + extra_time;
     }
 
     function cancelAuction() public {
