@@ -114,7 +114,7 @@ contract Auction {
         require(
             msg.value > current_highest_bid, 
             // "The current highest bid is: ", current_highest_bid, ". You must place a higher bid"
-            "You must place a higher bid"
+            "You must place a higher bid."
         );
         
         /*
