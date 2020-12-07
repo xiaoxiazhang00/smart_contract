@@ -48,9 +48,11 @@ contract Auction {
         current_highest_bid = 0;
     }
 
+    /*
+        Leads to a page of the item which includes information like name, description, time remaining, bidding history.
+        Has helper functions.
+    */
     function viewItem() public view returns (string memory, string memory) {
-        // Leads to a page of the item which includes information like name, description, time remaining, bidding history.
-        // Has helper functions.
         string memory name = this.getName();
         // string memory conjunction = ": "
         string memory desc = this.getDescription();
@@ -58,23 +60,32 @@ contract Auction {
         return (name, desc);
     }
 
+    /*
+        Function: Returns the address of the item's owner.
+    */
     function getItemOwnerAddress() public view returns (address) {
         return item_owner_address;
     }
 
+    /*
+        Function: Returns the name of the item.
+    */
     function getName() public view returns (string memory) {
-        // Function: Returns the name of the item.
         return item_name;
     }
 
+    /*
+        Function: Returns description of the item.
+    */
     function getDescription() public view returns (string memory) {
-        // Function: Returns description of the item.
         return description;
     }
 
+    /*
+        Condition(s): Auction cannot be over. Auction has not ended.
+        Function: Returns time remaining in the auction.
+    */
     function getTimeRemaining() public view returns (uint256) {
-        // Condition(s): Auction cannot be over. Auction has not ended.
-        // Function: Returns time remaining in the auction.
 
         require(block.timestamp <= end_time, "Auction has already ended.");
         require(!ended, "Auction has already ended.");
@@ -225,26 +236,27 @@ contract Auction {
         }
     }
 
-    function cancelAuction() public {
-        // Info: If no one placed a bid for the item, the auction should end by itself.
-        // Condition(s): Time has past the end time.
-        // Function: Delete contract.
-        ended = true;
+    /*
+        Info: If no one placed a bid for the item, the function allows the owner to cancel the auction, ending the contract.
+        Condition(s): No bids have happened yet. Auction has not ended yet.
+    */
+    function withdrawAuction() public {
+        require(bid_history.length == 0, "A bid has been placed. No Cancelling.");
+        require(!ended, "Auction has already ended.");
+
+        end_time = block.timestamp;
+        closeAuction();
     }
 
+
+    /*
+        Info: This function closes the auction by setting the status of ended to true.
+        Condition(s): Auction has not ended yet.
+    */
     function closeAuction() public {
-        // Info: If the auction extends past the original end time but the seller is satisfied or needs the funds at a specific time, this function allows them to end the auction.
-        // Condition(s): An auction continues after the end time. Auction has not ended.
-        // Function: Item will be transferred to highest bidder.
-        require(
-            block.timestamp >= original_end_time,
-            "Auction has not passed original end time."
-        );
         require(!ended, "Auction has already ended.");
 
         ended = true;
-
-        //To do: transfer ownership of the item to the highest bidder.
     }
 
 }
