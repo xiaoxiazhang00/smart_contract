@@ -95,20 +95,20 @@ contract Auction {
         index the index of bid history array
     */
     function getBidHistoryByIndex(uint256 index)
-        public
-        view
-        returns (
-            address,
-            uint256,
-            uint256
-        )
+    public
+    view
+    returns (
+        address,
+        uint256,
+        uint256
+    )
     {
         // ;
         require(index < bid_history.length, "Index out of range.");
         return (
-            bid_history[index].bidder_address,
-            bid_history[index].bid_amount,
-            bid_history[index].time_placed
+        bid_history[index].bidder_address,
+        bid_history[index].bid_amount,
+        bid_history[index].time_placed
         );
     }
 
@@ -118,7 +118,7 @@ contract Auction {
     */
 
     function transferFunds(
-        // address payable buyer,
+    // address payable buyer,
         address payable seller,
         uint256 cost
     ) public {
@@ -161,13 +161,20 @@ contract Auction {
         is higher than highest bid, then the highest bidder's funds should be released back to he/she and update highest bid.
     */
     function bid() public payable {
-        require(block.timestamp <= end_time, "Auction is over.");
+        require(
+            ended == false,
+            "Auction is over.");
 
         require(
-            msg.value > current_highest_bid,
-            // "The current highest bid is: ", current_highest_bid, ". You must place a higher bid"
+            block.timestamp <= end_time,
+            "Auction is over."
+        );
+
+        require(
+            msg.value > (current_highest_bid + (current_highest_bid/100) * 3),
             "You must place a higher bid."
         );
+
         require(
             canBid(msg.sender) == true,
             "You do not have sufficient balance."
@@ -184,6 +191,13 @@ contract Auction {
 
         bid_history.push(new_bid);
 
+        /*
+            Prevent someone from stealing the auction by quickly bidding before the end of the auction.
+            Increases the time left(1 minute) for the auction if someone place bid during the last 2 minutes
+        */
+        if (end_time - block.timestamp <= 120) {
+            end_time = end_time + 60;
+        }
         if (current_highest_bid == 0) {
             current_highest_bid = msg.value;
             current_highest_bidder = msg.sender;
@@ -192,18 +206,10 @@ contract Auction {
             current_highest_bidder = msg.sender;
             current_highest_bid = msg.value;
         }
-
-        /*
-            Prevent someone from stealing the auction by quickly bidding before the end of the auction.
-            Increases the time left(1 minute) for the auction if someone place bid during the last 2 minutes
-        */
-        if (end_time - block.timestamp <= 120) {
-            end_time = end_time + 60;
-        }
     }
 
     /*
-        End the auction and transfer highest bid. This looks at the time and 
+        End the auction and transfer highest bid. This looks at the time and
         indicates if auction has ended
     */
     function endAuction() public {
@@ -241,32 +247,4 @@ contract Auction {
         //To do: transfer ownership of the item to the highest bidder.
     }
 
-    /*
-        Converts uint to string. 
-        
-        Code taken from: https://github.com/provable-things/ethereum-api/blob/master/oraclizeAPI_0.5.sol#L1045
-    */
-
-    function uint2str(uint256 _i)
-        internal
-        pure
-        returns (string memory _uintAsString)
-    {
-        if (_i == 0) {
-            return "0";
-        }
-        uint256 j = _i;
-        uint256 len;
-        while (j != 0) {
-            len++;
-            j /= 10;
-        }
-        bytes memory bstr = new bytes(len);
-        uint256 k = len - 1;
-        while (_i != 0) {
-            bstr[k--] = bytes1(uint8(48 + (_i % 10)));
-            _i /= 10;
-        }
-        return string(bstr);
-    }
 }
