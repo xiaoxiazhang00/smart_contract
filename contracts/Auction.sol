@@ -133,9 +133,16 @@ contract Auction {
 
     /*
     test function to check if the bidder has enough money to bid
+    enough money to bid = highest_bid + 3% of highest bid + transaction cost
     */
     function can_bid(address payable buyer) public payable returns (bool) {
-        if (msg.value + tx.gasprice > buyer.balance) return true;
+        if (
+            current_highest_bid +
+                (current_highest_bid / 100) *
+                3 +
+                tx.gasprice >
+            buyer.balance
+        ) return true;
         else {
             return false;
         }
