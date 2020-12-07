@@ -58,6 +58,10 @@ contract Auction {
         return (name, desc);
     }
 
+    function getItemOwnerAddress() public view returns (address) {
+        return item_owner_address;
+    }
+
     function getName() public view returns (string memory) {
         // Function: Returns the name of the item.
         return item_name;
@@ -126,7 +130,9 @@ contract Auction {
     // function sendFunds(address buyer, address seller, ) public {
     // }
 
-    function transferOwnserhip(address buyer, address seller) public {}
+    function transferOwnserhip(address buyer) public {
+        item_owner_address = buyer;
+    }
 
     /*test function to check if the bidder has enough money to bid
      */
@@ -185,6 +191,7 @@ contract Auction {
 
         ended = true;
         seller_address.transfer(current_highest_bid);
+        this.transferOwnserhip(current_highest_bidder);
     }
 
     function addTime() public {
