@@ -2,12 +2,12 @@
 pragma solidity >=0.7.0 <0.8.0;
 
 contract Auction {
-    // (Sort of. See getTimeRemaining function) - Var time_remaining - countdown
+    // (See getTimeRemaining function) - Var time_remaining - countdown
     //     - List [] bid_history - bids that have been placed with addresses and bid amount
     //    - Time&Date Start_time - time of start.
     // (Return type is different) - Time&Date end_time - time the contract is supposed to end
-    // (same as owner_address right?) - Ethereum address - Auction’s owner’s address
-    // (is basically current_highest_bidder after the auction is over right?) - Ethereum address - Item’s owner address
+    // (same as owner_address) - Ethereum address - Auction’s owner’s address
+    // (current_highest_bidder) - Ethereum address - Item’s owner address
     //     - MinimumBidIncrement - minimum amount to bid (set to 1% of the item's current price)
 
     string item_name; // Name of the object/auctioned item
@@ -15,9 +15,9 @@ contract Auction {
 
     address public item_owner_address; // Default will be set to seller, but will be set to highest bidder at end of auction.
     address payable public seller_address; // Owner of item
-    uint256 public start_time;
-    uint256 public end_time;
-    uint256 public original_end_time;
+    uint256 public start_time; // start of the auction 
+    uint256 public end_time; // end of auction 
+    uint256 public original_end_time; 
     uint256 public reserve_price; // Minimum amount that a seller will accept as the winning bid
 
     // Current state of the auction.
