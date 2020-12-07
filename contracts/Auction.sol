@@ -187,9 +187,13 @@ contract Auction {
         require(block.timestamp >= end_time, "Auction not yet ended.");
         require(!ended, "Auction has already ended.");
 
-        ended = true;
-        seller_address.transfer(current_highest_bid);
-        this.transferOwnserhip(current_highest_bidder);
+        if (bid_history.length == 0) {
+            closeAuction();
+        } else {
+            seller_address.transfer(current_highest_bid);
+            this.transferOwnserhip(current_highest_bidder);
+            closeAuction();
+        }
     }
 
     function addTime() public {
@@ -212,13 +216,13 @@ contract Auction {
         // Info: If no one placed a bid for the item, the auction should end by itself.
         // Condition(s): Time has past the end time.
         // Function: Delete contract.
+        ended = true;
     }
 
     function closeAuction() public {
         // Info: If the auction extends past the original end time but the seller is satisfied or needs the funds at a specific time, this function allows them to end the auction.
         // Condition(s): An auction continues after the end time. Auction has not ended.
         // Function: Item will be transferred to highest bidder.
-
         require(
             block.timestamp >= original_end_time,
             "Auction has not passed original end time."
