@@ -127,15 +127,13 @@ contract Auction {
         // return true;
     }
 
-    // function sendFunds(address buyer, address seller, ) public {
-    // }
-
     function transferOwnserhip(address buyer) public {
         item_owner_address = buyer;
     }
 
-    /*test function to check if the bidder has enough money to bid
-     */
+    /*
+    test function to check if the bidder has enough money to bid
+    */
     function can_bid(address payable buyer) public payable returns (bool) {
         if (msg.value + tx.gasprice > buyer.balance) return true;
         else {
