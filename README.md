@@ -126,4 +126,8 @@ function returnBalance() public
 ### Leman
 1. Worked on member variables, constructor, returnBalance and bid function
 2. Deployed contract in Remix to test the contract works and fixed code issues: getTimeRemaining, canBid, endAuction
+### Rinchen
+1. Worked on transferOwnership, canBid function and some other helper functions
+2. debugged code and discussed code issues with all team members to make sure all functions were doing what they needed to do
+3. unsucessfully tried to deploy on remix
 
