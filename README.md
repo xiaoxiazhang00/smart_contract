@@ -25,8 +25,8 @@ We are doing one contract per item.
 
 **Item Attributes/Variables**
 
-    - string item_name – name of the object/auctioned item
-    - string description – description of the item
+    - string public item_name – name of the object/auctioned item
+    - string public description – description of the item
     - address public item_owner_address - default will be set to seller, but will be set to highest bidder at end of auction
     - address payable public seller_address - current owner
     - uint256 public start_time - time of start
@@ -35,8 +35,8 @@ We are doing one contract per item.
     - uint256 public reserve_price - minimum amount that a seller will accept as the winning bid
     - address payable public current_highest_bidder - the highest bidder at the time
     - uint256 public current_highest_bid - the highest bid at the time
-    - bid_record[] public bid_history - bids that have been placed with addresses and bid amount
     - bool ended - Auction status. Default is false. Set to true at end of auction and disallows any further changes.
+    - bid_record[] public bid_history - bids that have been placed with addresses and bid amount
     - struct bid_record:
         - address bidder_address - address of the person bidding
         - uint256 bid_amount - amount of currency that is being bid
@@ -45,34 +45,26 @@ We are doing one contract per item.
  **Functions**
 
 /** 
-    Returns information about the item which includes name and description.
-    Has helper functions.
+    Condition(s): Auction cannot be over. Auction has not ended.
+    Function: Returns time remaining in the auction.
 */
-
 ```
-function viewItem()
-function getItemOwnerAddress()
-function getName()
-function getDescription ()
-function getTimeRemaining()
-function getBidHistroyCount() //return the record count of bid history
+function getTimeRemaining() public
 ```
 
+/**
+    return the record count of bid history
+*/
+```
+function getBidHistoryCount() public
+```
 
 /**
     return a bid record by index
     index the index of bid history array
 */
 ```
-function getBidHistoryByIndex(uint256 index)
-```
-
-/**
-    transfer funds (withdraw the amount) from the buyer address
-    transfer it to the seller address 
-*/
-```
-function transferFunds(address payable seller,uint256 cost)
+function getBidHistoryByIndex(uint256 index) public
 ```
 
 /**
@@ -80,7 +72,7 @@ function transferFunds(address payable seller,uint256 cost)
     set and transfer the item_owner_address to the buyer address 
 */ 
 ```
-function transferOwnserhip(address buyer)
+function transferOwnserhip(address buyer) private
 ```
 
 /**
@@ -88,7 +80,7 @@ function transferOwnserhip(address buyer)
     enough money to bid = highest_bid + 3% of highest bid + transaction cost
 */
 ```
-  function canBid(address payable buyer)
+function canBid(address payable buyer) public
 ```
 
 /**
@@ -96,7 +88,7 @@ function transferOwnserhip(address buyer)
     is higher than highest bid, then the highest bidder's funds should be released back to he/she and update highest bid.
 */
 ```
-function bid()
+function bid() public
 ```
     
 /**
@@ -104,7 +96,7 @@ function bid()
     This looks at the time and indicates if auction has ended.
 */
 ```
-function endAuction()
+function endAuction() public 
 ```
 
 /**
@@ -112,7 +104,7 @@ function endAuction()
     Condition(s): No bids have happened yet. Auction has not ended yet.
 */
 ```
-function withdrawAuction()
+function withdrawAuction() public 
 ```
   
 /**
@@ -120,6 +112,19 @@ function withdrawAuction()
     Condition(s): Auction has not ended yet.
 */
 ```
-function closeAuction()
+function closeAuction() private
 ``` 
 
+/**
+    View your own balance.
+*/
+```
+function returnBalance() public 
+```
+
+/**
+    Function exclusively for testing. Allows us to test endAuction by making end_time = the current time to not hit the error case caused by time remaining.
+*/
+```
+function testEnd() public
+```
