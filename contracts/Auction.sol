@@ -182,7 +182,7 @@ contract Auction {
         if (bid_history.length == 0) {
             closeAuction();
         } else {
-            seller_address.transfer(current_highest_bid);
+            seller_address.transfer(address(this).balance);
             transferOwnership(current_highest_bidder);
             closeAuction();
         }
