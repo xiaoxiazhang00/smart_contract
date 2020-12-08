@@ -123,7 +123,7 @@ contract Auction {
         Place a bid on the item. The bid is added to the history of bids list. Incoming bid must be higher than the highest bid otherwise reject the bid. If incoming bid
         is higher than highest bid, then the highest bidder's funds should be released back to he/she and update highest bid.
     */
-    function bid() c payable {
+    function bid() public payable {
         require(
             ended == false,
             "Auction is over.");
@@ -193,6 +193,7 @@ contract Auction {
         Condition(s): No bids have happened yet. Auction has not ended yet.
     */
     function withdrawAuction() public {
+        require(msg.sender == seller_address, "You must be the seller in order to withdraw the auction");
         require(bid_history.length == 0, "A bid has been placed. No Cancelling.");
         require(!ended, "Auction has already ended.");
 
