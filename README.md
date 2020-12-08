@@ -6,6 +6,7 @@
 * [Group Members](#group-members)
 * [Purpose of Contract](#purpose-of-contract)
 * [Interface of Contract with function and event headers](#interface-of-contract-with-function-and-event-headers)
+* [Member Contributions] (#member-contributions) 
 
 ## Group Members
 - Muskan Kapoor(Muskan.kapoor75@myhunter.cuny.edu) 
@@ -121,3 +122,4 @@ function closeAuction() private
 ```
 function returnBalance() public 
 ```
+## Member Contributions
