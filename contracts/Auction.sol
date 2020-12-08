@@ -9,16 +9,15 @@ contract Auction {
     address public item_owner_address; // Default will be set to seller, but will be set to highest bidder at end of auction.
     address payable public seller_address; // Owner of item
     uint256 public start_time; // start of the auction 
-    uint256 public end_time; // end of auction 
-    uint256 public original_end_time; 
+    uint256 public end_time; // end of auction(may be affected by bids)
+    uint256 public original_end_time; // original end of auction
     uint256 public reserve_price; // Minimum amount that a seller will accept as the winning bid
 
     // Current state of the auction.
     address payable public current_highest_bidder;
     uint256 public current_highest_bid;
 
-    // Public for testing
-    bool public ended; // Auction status. Default is false. Set to true at end of auction and disallows any further changes.
+    bool ended; // Auction status. Default is false. Set to true at end of auction and disallows any further changes.
     struct bid_record {
         address bidder_address;
         uint256 bid_amount;
@@ -124,7 +123,7 @@ contract Auction {
         Place a bid on the item. The bid is added to the history of bids list. Incoming bid must be higher than the highest bid otherwise reject the bid. If incoming bid
         is higher than highest bid, then the highest bidder's funds should be released back to he/she and update highest bid.
     */
-    function bid() public payable {
+    function bid() c payable {
         require(
             ended == false,
             "Auction is over.");
@@ -217,6 +216,13 @@ contract Auction {
     */
     function returnBalance() public view returns (uint) {
         return msg.sender.balance;
+    }
+
+    /*
+        Function exclusively for testing. Allows us to test endAuction by making end_time = the current time to not hit the error case caused by time remaining.
+    */
+    function testEnd() public{
+        end_time = block.timestamp;
     }
 }
 
