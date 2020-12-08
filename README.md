@@ -25,77 +25,99 @@ We are doing one contract per item.
 
 **Item Attributes/Variables**
 
-    - string Name – name of the object/auctioned item
-    - string Description – description of the item
-    - Var time_remaining - countdown
-    - Address owner_address - current owner
-    - Float price - minimum_price/marked_by_seller
-    - Float current_highest_bid - the highest bid at the time
-    - Address current_highest_bidder - the highest bidder at the time
-    - List [] bid_history - bids that have been placed with addresses and bid amount
-    - Time&Date Start time - time of start
-    - Time&Date End time - time the contract is supposed to end
-    - Ethereum address - Auction’s owner’s address
-    - Ethereum address - Item’s owner address
-    - MinimumBidIncrement - minimum amount to bid (set to 1% of the item's current price)
+    - string item_name – name of the object/auctioned item
+    - string description – description of the item
+    - address public item_owner_address - default will be set to seller, but will be set to highest bidder at end of auction
+    - address payable public seller_address - current owner
+    - uint256 public start_time - time of start
+    - uint256 public end_time - time the contract is supposed to end
+    - uint256 public original_end_time - original time the contract is supposed to end
+    - uint256 public reserve_price - minimum amount that a seller will accept as the winning bid
+    - address payable public current_highest_bidder - the highest bidder at the time
+    - uint256 public current_highest_bid - the highest bid at the time
+    - bid_record[] public bid_history - bids that have been placed with addresses and bid amount
+    - bool ended - Auction status. Default is false. Set to true at end of auction and disallows any further changes.
+    - struct bid_record:
+        - address bidder_address - address of the person bidding
+        - uint256 bid_amount - amount of currency that is being bid
+        - uint256 time_placed - time that the bid was placed
 
  **Functions**
 
-/** View Item Function leads to a page of the item which includes information like name, description, time remaining, bidding history. 
-Has helper functions
+/** 
+    Returns information about the item which includes name and description.
+    Has helper functions.
 */
 
 ```
-View Item (item x)
-function getName (item x)
-function getDescription (item x)
-function getTimeRemaining (item x)
-Function getBiddingHistory (item x) //Displays bidding history which is a list of outbidded prices with timestamps. 
+function viewItem()
+function getItemOwnerAddress()
+function getName()
+function getDescription ()
+function getTimeRemaining()
+function getBidHistroyCount() //return the record count of bid history
 ```
+
+
 /**
-	Transfer ownership of the item from the auction owner to the new owner. The new owner’s Ethereum address will be listed as the owner.
+    return a bid record by index
+    index the index of bid history array
+*/
+```
+function getBidHistoryByIndex(uint256 index)
+```
+
+/**
+    transfer funds (withdraw the amount) from the buyer address
+    transfer it to the seller address 
+*/
+```
+function transferFunds(address payable seller,uint256 cost)
+```
+
+/**
+    transfer ownership 
+    set and transfer the item_owner_address to the buyer address 
 */ 
 ```
-function transferOwnership (address x, address y, item x)
+function transferOwnserhip(address buyer)
+```
+
+/**
+    test function to check if the bidder has enough money to bid
+    enough money to bid = highest_bid + 3% of highest bid + transaction cost
+*/
+```
+  function canBid(address payable buyer)
+```
+
+/**
+    Place a bid on the item. The bid is added to the history of bids list. Incoming bid must be higher than the highest bid otherwise reject the bid. If incoming bid
+    is higher than highest bid, then the highest bidder's funds should be released back to he/she and update highest bid.
+*/
+```
+function bid()
 ```
     
 /**
-	Send funds for the item to the auction owner
+    End the auction and transfer highest bid. 
+    This looks at the time and indicates if auction has ended.
 */
 ```
-function sendFunds (address x, address y, long double cost)
+function endAuction()
 ```
 
 /**
-	Place a bid on the item. The bid is added to the history of bids list. 
+    Info: If no one placed a bid for the item, the function allows the owner to cancel the auction, ending the contract.
+    Condition(s): No bids have happened yet. Auction has not ended yet.
 */
 ```
-function Bid (item x, address bidder, long double bid_amount)
-```
-    
-/**
-    Ends the auction only accessible by the selling party *immediately ends the auction. 
-*/
-```
-function end_auction()
-```
-
-/**
-    (in the last TBD minutes of an auction) called everytime a bid is placed if the auction is about to end and increases the time left for the auction
-*/
-``` 
-function add_time() 
-``` 
-
-/**
-    If no one placed a bid for the item, the auction should end by itself. Time has past the end time. Delete contract.
-*/
-```
-function cancelAuction()
+function withdrawAuction()
 ```
   
 /**
-    Only happens if an auction continues after the end time and owner wants to end the auction. Item will be transferred to highest bidder. 
+    Info: This function closes the auction by setting the status of ended to true.
+    Condition(s): Auction has not ended yet.
 */
 ```
 function closeAuction()
