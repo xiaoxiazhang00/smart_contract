@@ -2,13 +2,6 @@
 pragma solidity >=0.7.0 <0.8.0;
 
 contract Auction {
-    // (See getTimeRemaining function) - Var time_remaining - countdown
-    //     - List [] bid_history - bids that have been placed with addresses and bid amount
-    //    - Time&Date Start_time - time of start.
-    // (Return type is different) - Time&Date end_time - time the contract is supposed to end
-    // (same as owner_address) - Ethereum address - Auction’s owner’s address
-    // (current_highest_bidder) - Ethereum address - Item’s owner address
-    //     - MinimumBidIncrement - minimum amount to bid (set to 1% of the item's current price)
 
     string item_name; // Name of the object/auctioned item
     string description; // Description of the item
@@ -49,7 +42,7 @@ contract Auction {
     }
 
     /*
-        Leads to a page of the item which includes information like name, description, time remaining, bidding history.
+        Returns information about the item which includes name and description.
         Has helper functions.
     */
     function viewItem() public view returns (string memory, string memory) {
@@ -224,8 +217,8 @@ contract Auction {
     }
 
     /*
-        End the auction and transfer highest bid. This looks at the time and
-        indicates if auction has ended
+        End the auction and transfer highest bid. 
+        This looks at the time and indicates if auction has ended.
     */
     function endAuction() public {
         require(block.timestamp >= end_time, "Auction not yet ended.");
