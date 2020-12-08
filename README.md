@@ -123,3 +123,6 @@ function closeAuction() private
 function returnBalance() public 
 ```
 ## Member Contributions
+### Leman
+1. Worked on member variables, constructor and bid function
+
