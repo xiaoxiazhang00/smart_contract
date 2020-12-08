@@ -125,5 +125,5 @@ function returnBalance() public
 ## Member Contributions
 ### Leman
 1. Worked on member variables, constructor, returnBalance and bid function
-2. Deployed contract in Remix and fixed code issues: getTimeRemaining, canBid, endAuction
+2. Deployed contract in Remix to test the contract works and fixed code issues: getTimeRemaining, canBid, endAuction
 
