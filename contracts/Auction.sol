@@ -3,8 +3,8 @@ pragma solidity >=0.7.0 <0.8.0;
 
 contract Auction {
 
-    string item_name; // Name of the object/auctioned item
-    string description; // Description of the item
+    string public item_name; // Name of the object/auctioned item
+    string public description; // Description of the item
 
     address public item_owner_address; // Default will be set to seller, but will be set to highest bidder at end of auction.
     address payable public seller_address; // Owner of item
@@ -17,7 +17,8 @@ contract Auction {
     address payable public current_highest_bidder;
     uint256 public current_highest_bid;
 
-    bool ended; // Auction status. Default is false. Set to true at end of auction and disallows any further changes.
+    // Public for testing
+    bool public ended; // Auction status. Default is false. Set to true at end of auction and disallows any further changes.
     struct bid_record {
         address bidder_address;
         uint256 bid_amount;
@@ -29,7 +30,9 @@ contract Auction {
     constructor(
         uint256 auction_duration,
         address payable _seller_address,
-        uint256 starting_price
+        uint256 starting_price,
+        string memory _item_name,
+        string memory _description
     ) {
         item_owner_address = _seller_address;
         seller_address = _seller_address;
@@ -37,42 +40,12 @@ contract Auction {
         end_time = block.timestamp + auction_duration;
         original_end_time = end_time;
         reserve_price = starting_price;
+        current_highest_bid = starting_price;
         ended = false;
-        current_highest_bid = 0;
+        item_name = _item_name;
+        description = _description;
     }
 
-    /*
-        Returns information about the item which includes name and description.
-        Has helper functions.
-    */
-    function viewItem() public view returns (string memory, string memory) {
-        string memory name = this.getName();
-        // string memory conjunction = ": "
-        string memory desc = this.getDescription();
-
-        return (name, desc);
-    }
-
-    /*
-        Function: Returns the address of the item's owner.
-    */
-    function getItemOwnerAddress() public view returns (address) {
-        return item_owner_address;
-    }
-
-    /*
-        Function: Returns the name of the item.
-    */
-    function getName() public view returns (string memory) {
-        return item_name;
-    }
-
-    /*
-        Function: Returns description of the item.
-    */
-    function getDescription() public view returns (string memory) {
-        return description;
-    }
 
     /*
         Condition(s): Auction cannot be over. Auction has not ended.
@@ -83,14 +56,23 @@ contract Auction {
         require(block.timestamp <= end_time, "Auction has already ended.");
         require(!ended, "Auction has already ended.");
 
-        uint256 time_remaining = end_time - block.timestamp;
+        uint256 time_remaining;
+        if (end_time >= block.timestamp)
+        {
+            time_remaining = end_time - block.timestamp;
+        }
+        else
+        {
+            time_remaining = 0;
+        }
+        
         return time_remaining;
     }
 
     /*
         return the record count of bid history
     */
-    function getBidHistroyCount() public view returns (uint256) {
+    function getBidHistoryCount() public view returns (uint256) {
         return bid_history.length;
     }
 
@@ -116,34 +98,11 @@ contract Auction {
         );
     }
 
-    /* 
-        transfer funds (withdraw the amount) from the buyer address
-        transfer it to the seller address 
-    */
-
-    function transferFunds(
-    // address payable buyer,
-        address payable seller,
-        uint256 cost
-    ) public {
-        seller.transfer(cost);
-        // buyer(this).balance -= cost;
-
-        // seller(this).balance += cost;
-
-        // just an error check
-        // if (!buyer.send(cost)) {
-        //     return false;
-        // }
-
-        // return true;
-    }
-    
    /* 
         transfer ownership 
         set and transfer the item_owner_address to the buyer address 
     */
-    function transferOwnserhip(address buyer) public {
+    function transferOwnership(address buyer) private {
         item_owner_address = buyer;
     }
 
@@ -152,13 +111,10 @@ contract Auction {
     enough money to bid = highest_bid + 3% of highest bid + transaction cost
     */
     function canBid(address payable buyer) public payable returns (bool) {
-        if (
-            current_highest_bid +
-                (current_highest_bid / 100) *
-                3 +
-                tx.gasprice >
-            buyer.balance
-        ) return true;
+        if (current_highest_bid + (current_highest_bid / 100) * 3 + tx.gasprice < buyer.balance)
+        {
+            return true;
+        }
         else {
             return false;
         }
@@ -228,7 +184,7 @@ contract Auction {
             closeAuction();
         } else {
             seller_address.transfer(current_highest_bid);
-            this.transferOwnserhip(current_highest_bidder);
+            transferOwnership(current_highest_bidder);
             closeAuction();
         }
     }
@@ -250,10 +206,74 @@ contract Auction {
         Info: This function closes the auction by setting the status of ended to true.
         Condition(s): Auction has not ended yet.
     */
-    function closeAuction() public {
+    function closeAuction() private {
         require(!ended, "Auction has already ended.");
 
         ended = true;
     }
 
+    /*
+        View your own balance.
+    */
+    function returnBalance() public view returns (uint) {
+        return msg.sender.balance;
+    }
 }
+
+
+    // /*
+    //     Returns information about the item which includes name and description.
+    //     Has helper functions.
+    // */
+    // function viewItem() public view returns (string memory, string memory) {
+    //     string memory name = this.getName();
+    //     // string memory conjunction = ": "
+    //     string memory desc = this.getDescription();
+
+    //     return (name, desc);
+    // }
+
+    /*
+        Function: Returns the address of the item's owner.
+    */
+    // function getItemOwnerAddress() public view returns (address) {
+    //     return item_owner_address;
+    // }
+
+    /*
+        Function: Returns the name of the item.
+    */
+    // function getName() public view returns (string memory) {
+    //     return item_name;
+    // }
+
+    /*
+        Function: Returns description of the item.
+    */
+    // function getDescription() public view returns (string memory) {
+    //     return description;
+    // }
+
+    /* 
+        transfer funds (withdraw the amount) from the buyer address
+        transfer it to the seller address 
+    */
+
+    // function transferFunds(
+    // // address payable buyer,
+    //     address payable seller,
+    //     uint256 cost
+    // ) public {
+    //     seller.transfer(cost);
+    //     // buyer(this).balance -= cost;
+
+    //     // seller(this).balance += cost;
+
+    //     // just an error check
+    //     // if (!buyer.send(cost)) {
+    //     //     return false;
+    //     // }
+
+    //     // return true;
+    // }
+    
