@@ -121,10 +121,3 @@ function closeAuction() private
 ```
 function returnBalance() public 
 ```
-
-/**
-    Function exclusively for testing. Allows us to test endAuction by making end_time = the current time to not hit the error case caused by time remaining.
-*/
-```
-function testEnd() public
-```
