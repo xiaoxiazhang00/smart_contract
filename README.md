@@ -133,4 +133,8 @@ function returnBalance() public
 ### Xiaoxia
 1. Setup and manage the git project, help on code review, fix compiler error, make sure everything compiles before checked in
 2. Worked on maintaining bid_history, and auto-extend bid time features in bid function
+### Muskan
+1. Involved with all team members throughout the process to make sure all steps of the project (planning, coding, code reviews) is successful
+2. Implemeted endAuction, transferOwnership, sendFunds (this function that was part of the original plan), and few other small functions
+3. worked on updating some member varaibles, added some function description and readme updates as needed to reflect the ongoing changes of the project
 
