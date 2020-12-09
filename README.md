@@ -130,4 +130,7 @@ function returnBalance() public
 1. Worked on transferOwnership, canBid function and some other helper functions
 2. debugged code and discussed code issues with all team members to make sure all functions were doing what they needed to do
 3. unsucessfully tried to deploy on remix
+### Xiaoxia
+1. Setup and manage the git project, help on code review, fix compiler error, make sure everything compiles before checked in
+2. Worked on maintaining bid_history, and auto-extend bid time features in bid function
 
