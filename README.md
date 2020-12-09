@@ -137,4 +137,9 @@ function returnBalance() public
 1. Involved with all team members throughout the process to make sure all steps (planning, coding, code reviews) is successful
 2. Implemeted endAuction, transferOwnership, sendFunds (this function was part of the original plan)
 3. worked on updating some member varaibles, added some function descriptions and readme updates
+### Jeremy
+1. Implemented the original planned member variables(later adjusted) and first version of the constructor(later expanded upon).
+2. Implemented the bid_record structure, getTimeRemaining(), withdrawAuction(), closeAuction().
+3. Debugged sections of code written by other group members.
+4. Updated the ReadME file to display all current functions and declared variables.
 
